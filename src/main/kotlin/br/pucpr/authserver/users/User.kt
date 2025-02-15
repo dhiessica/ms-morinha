@@ -1,5 +1,6 @@
 package br.pucpr.authserver.users
 
+import br.pucpr.authserver.pets.Pet
 import br.pucpr.authserver.roles.Role
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
@@ -22,5 +23,13 @@ class User(
         joinColumns = [JoinColumn(name = "idUser")],
         inverseJoinColumns = [JoinColumn(name = "idRole")]
     )
-    val roles: MutableSet<Role> = mutableSetOf()
+    val roles: MutableSet<Role> = mutableSetOf(),
+
+    @OneToMany
+    @JoinTable(
+        name="UserPets",
+        joinColumns = [JoinColumn(name = "idUser")],
+        inverseJoinColumns = [JoinColumn(name = "idPet")]
+    )
+    val pets: MutableSet<Pet> = mutableSetOf()
 )

@@ -1,8 +1,9 @@
 package br.pucpr.authserver.users.controller
 
+import br.pucpr.authserver.pets.CreatePetRequest
+import br.pucpr.authserver.pets.PetResponse
+import br.pucpr.authserver.pets.PetService
 import br.pucpr.authserver.users.SortDir
-import br.pucpr.authserver.users.User
-import br.pucpr.authserver.users.UserRequest
 import br.pucpr.authserver.users.UserService
 import br.pucpr.authserver.users.controller.requests.CreateUserRequest
 import br.pucpr.authserver.users.controller.responses.UserResponse
@@ -14,9 +15,9 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/users")
 class UserController(
-    val userService: UserService
+    val userService: UserService,
 ) {
-    @PostMapping()
+    @PostMapping
     fun insert(@RequestBody @Valid user: CreateUserRequest) =
         userService.save(user.toUser())
             .let { UserResponse(it) }
