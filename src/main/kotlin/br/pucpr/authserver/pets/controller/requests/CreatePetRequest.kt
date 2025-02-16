@@ -8,17 +8,23 @@ import java.time.LocalDate
 data class CreatePetRequest(
     @field:NotBlank
     var name: String?,
-    @field:NotNull
-    var birthDate: LocalDate?,
+    @field:NotBlank
+    var specie: String?,
     @field:NotBlank
     var breed: String?,
+    @field:NotBlank
+    var genre: String?,
+    @field:NotNull
+    var birthDate: LocalDate?,
     @field:NotNull
     var weight: Double?
 ) {
     fun toPet(): Pet = Pet(
         name = name!!,
-        birthDate = birthDate!!,
+        specie = specie!!,
         breed = breed!!,
+        genre = genre!!,
+        birthDate = birthDate!!,
         weight = weight!!,
     )
 }

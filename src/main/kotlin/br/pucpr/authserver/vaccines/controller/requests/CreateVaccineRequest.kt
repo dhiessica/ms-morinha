@@ -10,7 +10,6 @@ data class CreateVaccineRequest(
     var name: String?,
     @field:NotNull
     var brand: String?,
-    @field:NotBlank
     var applicationDate: LocalDate?
 ) {
     fun toVaccine(): Vaccine = Vaccine(

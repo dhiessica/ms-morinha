@@ -1,5 +1,6 @@
 package br.pucpr.authserver.vaccines.controller
 
+import br.pucpr.authserver.users.SortDir
 import br.pucpr.authserver.vaccines.VaccineService
 import br.pucpr.authserver.vaccines.controller.requests.CreateVaccineRequest
 import br.pucpr.authserver.vaccines.controller.responses.VaccineResponse
@@ -20,11 +21,15 @@ class VaccinesController(
             .let { ResponseEntity.status(HttpStatus.CREATED).body(it) }
 
     @GetMapping("/pet/{petId}")
-    fun findAllByPetId(@PathVariable petId: Long): ResponseEntity<List<VaccineResponse>> =
-        vaccineService.findAllVaccinesByPetIdOrNull(petId)
+    fun findAllByPetId(@PathVariable petId: Long, @RequestParam dir: String = "ASC"): ResponseEntity<List<VaccineResponse>> {
+        val sortDir = SortDir.findOrNull(dir)
+        return if (sortDir == null)
+            ResponseEntity.badRequest().build()
+        else vaccineService.findAllVaccinesByPetIdOrNull(petId, sortDir)
             ?.map { VaccineResponse(it) }
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
+    }
 
     @DeleteMapping("/id")
     fun delete(@PathVariable id: Long): ResponseEntity<Void> = vaccineService.delete(id)

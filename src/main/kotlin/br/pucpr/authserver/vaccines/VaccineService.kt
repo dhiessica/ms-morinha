@@ -2,6 +2,7 @@ package br.pucpr.authserver.vaccines
 
 import br.pucpr.authserver.exception.NotFoundException
 import br.pucpr.authserver.pets.PetService
+import br.pucpr.authserver.users.SortDir
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,9 +16,13 @@ class VaccineService(
         return vaccineRepository.save(vaccine)
     }
 
-    fun findAllVaccinesByPetIdOrNull(petId: Long): List<Vaccine>? {
+    fun findAllVaccinesByPetIdOrNull(petId: Long, dir: SortDir): List<Vaccine>? {
         petService.findByIdOrNull(petId) ?: throw NotFoundException("Pet $petId not found: ")
-        return vaccineRepository.findByPetId(petId)
+        val petVaccines =  vaccineRepository.findByPetId(petId)
+        return when (dir) {
+            SortDir.ASC -> petVaccines.sortedBy { it.applicationDate }
+            SortDir.DESC -> petVaccines.sortedByDescending { it.applicationDate }
+        }
     }
 
     fun delete(id: Long) = vaccineRepository.deleteById(id)

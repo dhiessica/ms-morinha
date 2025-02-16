@@ -6,9 +6,11 @@ import java.time.LocalDate
 data class PetResponse(
     val id: Long,
     val name: String,
-    var birthDate: LocalDate,
-    var breed: String,
-    var weight: Double,
+    val specie: String,
+    val breed: String,
+    val genre: String,
+    val birthDate: LocalDate,
+    val weight: Double,
 ) {
-    constructor(pet: Pet): this(id = pet.id!!, pet.name, pet.birthDate, pet.breed, pet.weight)
+    constructor(pet: Pet): this(id = pet.id!!, pet.name, pet.specie, pet.breed, pet.genre, pet.birthDate, pet.weight)
 }

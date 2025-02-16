@@ -12,8 +12,10 @@ class Pet(
     var id: Long? = null,
     @NotBlank
     var name: String = "",
-    var birthDate: LocalDate,
+    var specie: String = "",
     var breed: String = "",
+    var genre: String = "",
+    var birthDate: LocalDate,
     var weight: Double = 0.0,
 
     @ManyToOne

@@ -2,7 +2,6 @@ package br.pucpr.authserver.users
 
 import br.pucpr.authserver.exception.BadRequestException
 import br.pucpr.authserver.exception.NotFoundException
-import br.pucpr.authserver.roles.RoleRepository
 import br.pucpr.authserver.roles.RoleService
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
