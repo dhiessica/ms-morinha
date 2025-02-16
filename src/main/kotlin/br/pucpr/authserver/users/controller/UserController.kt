@@ -1,8 +1,5 @@
 package br.pucpr.authserver.users.controller
 
-import br.pucpr.authserver.pets.CreatePetRequest
-import br.pucpr.authserver.pets.PetResponse
-import br.pucpr.authserver.pets.PetService
 import br.pucpr.authserver.users.SortDir
 import br.pucpr.authserver.users.UserService
 import br.pucpr.authserver.users.controller.requests.CreateUserRequest

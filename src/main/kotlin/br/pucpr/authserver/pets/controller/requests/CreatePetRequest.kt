@@ -1,5 +1,6 @@
-package br.pucpr.authserver.pets
+package br.pucpr.authserver.pets.controller.requests
 
+import br.pucpr.authserver.pets.Pet
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDate

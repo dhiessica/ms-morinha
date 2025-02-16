@@ -2,6 +2,7 @@ package br.pucpr.authserver.pets
 
 import br.pucpr.authserver.exception.NotFoundException
 import br.pucpr.authserver.users.UserService
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,8 +16,13 @@ class PetService(
         return petRepository.save(pet)
     }
 
+    fun findByIdOrNull(id: Long) = petRepository.findByIdOrNull(id)
+
+
     fun findAllPetsByUserIdOrNull(userId: Long): List<Pet>? {
         userService.findByIdOrNull(userId) ?: throw NotFoundException("User $userId not found: ")
         return petRepository.findByUserId(userId)
     }
+
+    fun delete(id: Long) = petRepository.deleteById(id)
 }

@@ -1,5 +1,6 @@
-package br.pucpr.authserver.pets
+package br.pucpr.authserver.pets.controller.responses
 
+import br.pucpr.authserver.pets.Pet
 import java.time.LocalDate
 
 data class PetResponse(
