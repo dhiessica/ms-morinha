@@ -1,0 +1,44 @@
+package br.pucpr.authserver.security
+
+import br.pucpr.authserver.users.User
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.jackson.io.JacksonSerializer
+import io.jsonwebtoken.security.Keys
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.util.Date
+
+@Component
+class JWT {
+    fun createToken(user: User): String =
+        UserToken(user).let {
+            Jwts.builder().json(JacksonSerializer())
+                .signWith(Keys.hmacShaKeyFor(SECRET.toByteArray()))
+                .subject(user.id.toString())
+                .issuedAt(utcNow().toDate())
+                .expiration(
+                    utcNow().plusHours(
+                        if (it.isAdmin) ADMIN_EXPIRE_HOURS else EXPIRE_HOURS
+                    ).toDate()
+                )
+                .issuer(ISSUER)
+                .claim(USER_FIELD, it)
+                .compact()
+        }
+
+    companion object {
+        val log = LoggerFactory.getLogger(JWT::class.java)
+
+        //senha "Minha super senha em SHA-1
+        const val SECRET = "7a7d6746642863ca5bc54488b8a2766dc87651e3"
+        const val EXPIRE_HOURS = 48L
+        const val ADMIN_EXPIRE_HOURS = 1L
+        const val ISSUER = "AuthServer"
+        const val USER_FIELD = "user"
+
+        private fun utcNow() = ZonedDateTime.now(ZoneOffset.UTC)
+        private fun ZonedDateTime.toDate():Date = Date.from(this.toInstant())
+    }
+}

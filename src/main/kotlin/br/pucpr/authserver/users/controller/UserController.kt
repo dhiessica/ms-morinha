@@ -3,6 +3,8 @@ package br.pucpr.authserver.users.controller
 import br.pucpr.authserver.users.SortDir
 import br.pucpr.authserver.users.UserService
 import br.pucpr.authserver.users.controller.requests.CreateUserRequest
+import br.pucpr.authserver.users.controller.requests.LoginRequest
+import br.pucpr.authserver.users.controller.responses.LoginResponse
 import br.pucpr.authserver.users.controller.responses.UserResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -48,5 +50,12 @@ class UserController(
             ResponseEntity.ok().build()
         else
             ResponseEntity.noContent().build()
+
+    @PostMapping("/login")
+    fun login(@Valid @RequestBody user: LoginRequest): ResponseEntity<LoginResponse> =
+        userService.login(user.email!!, user.password!!)
+            ?.let { ResponseEntity.ok().body(it) }
+            ?: ResponseEntity.notFound().build()
+
 
 }
