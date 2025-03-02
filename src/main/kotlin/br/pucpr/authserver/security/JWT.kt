@@ -17,19 +17,19 @@ import java.time.ZonedDateTime
 import java.util.Date
 
 @Component
-class JWT {
+class JWT(val properties: TokenProperties) {
     fun createToken(user: User): String =
         UserToken(user).let {
             Jwts.builder().json(JacksonSerializer())
-                .signWith(Keys.hmacShaKeyFor(SECRET.toByteArray()))
+                .signWith(Keys.hmacShaKeyFor(properties.secret.toByteArray()))
                 .subject(user.id.toString())
                 .issuedAt(utcNow().toDate())
                 .expiration(
                     utcNow().plusHours(
-                        if (it.isAdmin) ADMIN_EXPIRE_HOURS else EXPIRE_HOURS
+                        if (it.isAdmin) properties.adminExpireHours else properties.expireHours
                     ).toDate()
                 )
-                .issuer(ISSUER)
+                .issuer(properties.issuer)
                 .claim(USER_FIELD, it)
                 .compact()
         }
@@ -42,11 +42,11 @@ class JWT {
             if (token.isEmpty()) return null
 
             val claims = Jwts.parser().json(JacksonDeserializer(mapOf(USER_FIELD to UserToken::class.java)))
-                .verifyWith(Keys.hmacShaKeyFor(SECRET.toByteArray()))
+                .verifyWith(Keys.hmacShaKeyFor(properties.secret.toByteArray()))
                 .build()
                 .parseSignedClaims(token).payload
 
-            if (claims.issuer != ISSUER) return null
+            if (claims.issuer != properties.issuer) return null
             return claims.get("user", UserToken::class.java).toAuthentication()
 
 
@@ -58,12 +58,6 @@ class JWT {
 
     companion object {
         val log = LoggerFactory.getLogger(JWT::class.java)
-
-        //senha "Minha super senha em SHA-1
-        const val SECRET = "7a7d6746642863ca5bc54488b8a2766dc87651e3"
-        const val EXPIRE_HOURS = 48L
-        const val ADMIN_EXPIRE_HOURS = 1L
-        const val ISSUER = "AuthServer"
         const val USER_FIELD = "user"
 
         private fun utcNow() = ZonedDateTime.now(ZoneOffset.UTC)
